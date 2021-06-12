@@ -21,3 +21,9 @@ message opendlv.proxy.RawCANFrame [id = 51] {
   uint8 length  [id = 2];
   bytes data    [id = 3];
 }
+
+message opendlv.proxy.RawUInt64CANFrame [id = 52] {
+  uint32 canID  [id = 1];
+  uint8 length  [id = 2];
+  uint64 data   [id = 3];
+}

@@ -1,4 +1,4 @@
-# Copyright (C) 2019  Christian Berger
+# Copyright (C) 2021  Christian Berger
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,31 +13,30 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Part to build opendlv-device-can-replay.
-FROM alpine:3.7 as builder
+# Part to build can-replay2log.
+FROM alpine:3.13 as builder
 MAINTAINER Christian Berger "christian.berger@gu.se"
 RUN apk update && \
     apk --no-cache add \
         cmake \
         g++ \
         linux-headers \
-        make \
-        upx
+        make
 
 ADD . /opt/sources
 WORKDIR /opt/sources
 
 RUN mkdir -p /opt/sources/build && \
     cd /opt/sources/build && \
-    cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/tmp/opendlv-device-can-replay-dest .. && \
-    make && make install && upx -9 /tmp/opendlv-device-can-replay-dest/bin/opendlv-device-can-replay
+    cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/tmp/dest .. && \
+    make && make install
 
 
-# Part to deploy opendlv-device-can-replay.
-FROM alpine:3.7
+# Part to deploy can-replay2log.
+FROM alpine:3.13
 MAINTAINER Christian Berger "christian.berger@gu.se"
 
 WORKDIR /usr/bin
-COPY --from=builder /tmp/opendlv-device-can-replay-dest/bin/opendlv-device-can-replay .
-ENTRYPOINT ["/usr/bin/opendlv-device-can-replay"]
+COPY --from=builder /tmp/dest/bin/can-replay2log .
+ENTRYPOINT ["/usr/bin/can-replay2log"]
 
