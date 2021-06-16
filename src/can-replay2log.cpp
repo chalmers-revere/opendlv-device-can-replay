@@ -75,7 +75,10 @@ int32_t main(int32_t argc, char **argv) {
                                 std::time_t t = static_cast<std::time_t>(first.seconds());
                                 char mbstr[100];
                                 if (std::strftime(mbstr, sizeof(mbstr), "%a %b %d %r %G", std::localtime(&t))) {
-                                    std::cout << "Begin Triggerblock " << mbstr << std::endl;
+                                    std::cout << "date " << mbstr << std::endl;
+                                    std::cout << "base hex  timestamps absolute" << std::endl;
+                                    std::cout << "internal events logged" << std::endl;
+                                    std::cout << "// version 10.0.1" << std::endl;
                                 }
                             }
                         }
@@ -105,19 +108,16 @@ int32_t main(int32_t argc, char **argv) {
                                           << " " << e.senderStamp() << "  ";
                                 std::cout << std::setfill('0') << std::setw(0) << std::uppercase
                                           << std::hex << (canFrame.canID() & 0x3FFFFFFF) << "x"
-                                          << "\t\tRx d " << std::dec << +(canFrame.length());
+                                          << "\t\tRx   d " << std::dec << +(canFrame.length());
                                 std::cout << std::setfill('0') << std::setw(2) << std::uppercase;
                                 for(uint8_t i{0}; i<canFrame.length(); i++) {
                                     std::cout << " " << std::hex << std::setfill('0') <<  std::setw(2) << (+((uint8_t)canData.bytes[i]));
                                 }
-                                std::cout << std::dec << std::endl;
+                                std::cout << "  Length = 0 BitCount = 0 ID = " << std::dec << canFrame.canID() << "x" << std::endl;
                             }
                         }
                     }
                 }
-            }
-            if (ASC) {
-                std::cout << "End TriggerBlock" << std::endl;
             }
             retCode = 0;
         }
