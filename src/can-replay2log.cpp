@@ -107,13 +107,14 @@ int32_t main(int32_t argc, char **argv) {
                                           << std::setfill('0') << std::setw(6) << e.sampleTimeStamp().microseconds() << " " 
                                           << " " << e.senderStamp() << "  ";
                                 std::cout << std::setfill('0') << std::setw(0) << std::uppercase
-                                          << std::hex << (canFrame.canID() & 0x3FFFFFFF) << "x"
-                                          << "\t\tRx   d " << std::dec << +(canFrame.length());
-                                std::cout << std::setfill('0') << std::setw(2) << std::uppercase;
+                                          << std::hex << (canFrame.canID() & 0x3FFFFFFF) << "x";
+                                std::cout << std::dec;
+                                std::cout << std::setfill(' ') << std::setw(0);
+                                std::cout << "\t\tRx   d " << std::dec << (+canFrame.length()) << " ";
                                 for(uint8_t i{0}; i<canFrame.length(); i++) {
-                                    std::cout << " " << std::hex << std::setfill('0') <<  std::setw(2) << (+((uint8_t)canData.bytes[i]));
+                                    std::cout << std::hex << std::setfill('0') <<  std::setw(2) << (+((uint8_t)canData.bytes[i])) << " ";
                                 }
-                                std::cout << "  Length = 0 BitCount = 0 ID = " << std::dec << canFrame.canID() << "x" << std::endl;
+                                std::cout << " Length = 0 BitCount = 0 ID = " << std::dec << canFrame.canID() << "x" << std::endl;
                             }
                         }
                     }
