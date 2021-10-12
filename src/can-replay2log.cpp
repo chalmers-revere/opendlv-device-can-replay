@@ -34,15 +34,17 @@ int32_t main(int32_t argc, char **argv) {
     if ( (0 == commandlineArguments.count("log")) && (0 == commandlineArguments.count("asc")) ) {
         std::cerr << argv[0] << " converts captured raw CAN frames in opendlv.proxy.RawUInt64CANFrame format into .asc or .log format with the specified CAN device as prefix." << std::endl;
         std::cerr << "Usage:   " << argv[0] << " [--id=ID] --log" << std::endl;
-        std::cerr << "         --asc:    convert RawUInt64CANFrame into .asc format" << std::endl;
-        std::cerr << "         --log:    convert RawUInt64CANFrame into .log format" << std::endl;
-        std::cerr << "         --id:     ID of opendlv.proxy.RawCANFrame to replay; default: -1 to export all CAN frames" << std::endl;
+        std::cerr << "         --asc:      convert RawUInt64CANFrame into .asc format" << std::endl;
+        std::cerr << "         --log:      convert RawUInt64CANFrame into .log format" << std::endl;
+        std::cerr << "         --reverse:  spit out bytes in reverse order" << std::endl;
+        std::cerr << "         --id:       ID of opendlv.proxy.RawCANFrame to replay; default: -1 to export all CAN frames" << std::endl;
         std::cerr << "Example: " << argv[0] << " --log" << std::endl;
     }
     else {
         const int32_t ID{(commandlineArguments["id"].size() != 0) ? static_cast<int32_t>(std::stoi(commandlineArguments["id"])) : -1};
         const bool ASC{(commandlineArguments["asc"].size() != 0)};
         const bool LOG{(commandlineArguments["log"].size() != 0)};
+        const bool REVERSE{(commandlineArguments["reverse"].size() != 0)};
 
         std::string recFile;
         for (auto e : commandlineArguments) {
@@ -98,7 +100,11 @@ int32_t main(int32_t argc, char **argv) {
                                           << "#";
                                 std::cout << std::setfill('0') << std::setw(2) << std::uppercase;
                                 for(uint8_t i{0}; i<canFrame.length(); i++) {
-                                    std::cout << std::hex << std::setfill('0') <<  std::setw(2) << (+((uint8_t)canData.bytes[i]));
+                                    if (!REVERSE) {
+                                        std::cout << std::hex << std::setfill('0') <<  std::setw(2) << (+((uint8_t)canData.bytes[i]));
+                                    } else {
+                                        std::cout << std::hex << std::setfill('0') <<  std::setw(2) << (+((uint8_t)canData.bytes[canFrame.length() - 1 - i]));
+                                    }
                                 }
                                 std::cout << std::dec << std::endl;
                             }
@@ -112,7 +118,11 @@ int32_t main(int32_t argc, char **argv) {
                                 std::cout << std::setfill(' ') << std::setw(0);
                                 std::cout << "\t\tRx   d " << std::dec << (+canFrame.length()) << " ";
                                 for(uint8_t i{0}; i<canFrame.length(); i++) {
-                                    std::cout << std::hex << std::setfill('0') <<  std::setw(2) << (+((uint8_t)canData.bytes[i])) << " ";
+                                    if (!REVERSE) {
+                                        std::cout << std::hex << std::setfill('0') <<  std::setw(2) << (+((uint8_t)canData.bytes[i])) << " ";
+                                    } else {
+                                        std::cout << std::hex << std::setfill('0') <<  std::setw(2) << (+((uint8_t)canData.bytes[canFrame.length() - 1 - i])) << " ";
+                                    }
                                 }
                                 std::cout << " Length = 0 BitCount = 0 ID = " << std::dec << canFrame.canID() << "x" << std::endl;
                             }
