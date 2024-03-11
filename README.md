@@ -1,3 +1,5 @@
+Moved to https://git.opendlv.org.
+
 ## OpenDLV Microservice to replay captured CAN frames to a CAN interface
 
 This repository provides source code to replay capture raw CAN frames in
